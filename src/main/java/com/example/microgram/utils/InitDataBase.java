@@ -37,6 +37,7 @@ public class InitDataBase {
                 "    email TEXT,\n" +
                 "    user_password TEXT,\n" +
                 "    user_role TEXT,\n" +
+                "    enabled BOOLEAN,\n" +
                 "    publications INTEGER,\n" +
                 "    subscriptions INTEGER,\n" +
                 "    subscribers INTEGER \n" +
@@ -88,11 +89,11 @@ public class InitDataBase {
 
 
     private void fillUsersTable(){
-        jdbcTemplate.execute("INSERT INTO users(username, email, user_password, user_role, publications, subscriptions, subscribers)\n" +
+        jdbcTemplate.execute("INSERT INTO users(username, email, user_password, user_role, enabled, publications, subscriptions, subscribers)\n" +
                 "VALUES\n" +
-                "    ('Artur','artur230704@gmail.com','qwerty','USER',0,2,0),\n" +
-                "    ('Andrey','andrey@gmail.com','asd','USER',2,1,2),\n" +
-                "    ('Petya','petya@gmail.com','zxc','USER',1,1,2);");
+                "    ('Artur','artur230704@gmail.com','qwerty','USER',true,0,2,0),\n" +
+                "    ('Andrey','andrey@gmail.com','asd','USER',true,2,1,2),\n" +
+                "    ('Petya','petya@gmail.com','zxc','USER',true,1,1,2);");
     }
     private void fillPublicationsTable(){
         jdbcTemplate.execute("INSERT INTO publications(user_id, image, description, publication_date)\n" +

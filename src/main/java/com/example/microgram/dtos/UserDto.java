@@ -1,20 +1,17 @@
-package com.example.microgram.entities;
+package com.example.microgram.dtos;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class UserDto {
     private Long userId;
     private String username;
     private String email;
     private String password;
-    private String userRole;
-    private Boolean enabled;
-    private Integer publications;
-    private Integer subscriptions;
-    private Integer subscribers;
 }
