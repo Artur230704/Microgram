@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -18,12 +20,12 @@ public class UserController {
     }
 
     @GetMapping("/users/name/{username}")
-    public ResponseEntity<String> findByName(@PathVariable String username){
+    public ResponseEntity<List<UserDto>> findByName(@PathVariable String username){
         return new ResponseEntity<>(userService.findUserByName(username), HttpStatus.OK);
     }
 
     @GetMapping("/users/email/{email}")
-    public ResponseEntity<String> findByEmail(@PathVariable String email){
+    public ResponseEntity<List<UserDto>> findByEmail(@PathVariable String email){
         return new ResponseEntity<>(userService.findUserByEmail(email), HttpStatus.OK);
     }
 }

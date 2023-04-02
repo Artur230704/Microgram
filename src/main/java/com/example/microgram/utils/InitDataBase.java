@@ -1,15 +1,23 @@
 package com.example.microgram.utils;
 
 
+import com.example.microgram.daos.UserDao;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 @Configuration
 @AllArgsConstructor
 public class InitDataBase {
     private JdbcTemplate jdbcTemplate;
+    private UserDao userDao;
+    private PasswordEncoder encoder;
 
     @Bean
     public void createTables(){
@@ -89,11 +97,25 @@ public class InitDataBase {
 
 
     private void fillUsersTable(){
-        jdbcTemplate.execute("INSERT INTO users(username, email, user_password, user_role, enabled, publications, subscriptions, subscribers)\n" +
+        String sql = "INSERT INTO users(username, email, user_password, user_role, enabled, publications, subscriptions, subscribers)\n" +
                 "VALUES\n" +
-                "    ('Artur','artur230704@gmail.com','qwerty','USER',true,0,2,0),\n" +
-                "    ('Andrey','andrey@gmail.com','asd','USER',true,2,1,2),\n" +
-                "    ('Petya','petya@gmail.com','zxc','USER',true,1,1,2);");
+                "    ('Artur','artur230704@gmail.com',?,'USER',true,0,2,0),\n" +
+                "    ('Andrey','andrey@gmail.com',?,'USER',true,2,1,2),\n" +
+                "    ('Petya','Petya@gmail.com',?,'USER',true,1,1,2);";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setString(1,encoder.encode("qwerty"));
+                ps.setString(2,encoder.encode("asd"));
+                ps.setString(3,encoder.encode("zxc"));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return 1;
+            }
+        });
     }
     private void fillPublicationsTable(){
         jdbcTemplate.execute("INSERT INTO publications(user_id, image, description, publication_date)\n" +

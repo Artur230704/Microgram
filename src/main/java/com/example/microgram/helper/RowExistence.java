@@ -13,4 +13,10 @@ public class RowExistence {
                 "    WHERE user_id = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, userId);
     }
+
+    public Boolean checkPublicationExistenceById(Long publicationId){
+        String sql = "SELECT EXISTS(SELECT FROM publications\n" +
+                "    WHERE publication_id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, publicationId);
+    }
 }

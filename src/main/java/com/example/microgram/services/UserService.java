@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,31 +26,17 @@ public class UserService {
         return userDao.register(userDto);
     }
 
-    public String findUserByName(String username){
+    public List<UserDto> findUserByName(String username){
         List<User> users = userDao.findUserByName(username);
-        return usersListToString(users);
+        return users.stream()
+                .map(UserDto::from)
+                .collect(Collectors.toList());
     }
 
-    public String findUserByEmail(String email){
+    public List<UserDto> findUserByEmail(String email){
         List<User> users = userDao.findUserByEmail(email);
-        return usersListToString(users);
-    }
-
-    private String usersListToString(List<User> users){
-        if(users.isEmpty()){
-            return "There is no such a user";
-        }
-
-        StringBuilder builder = new StringBuilder();
-        for (User user : users){
-            builder.append("Name: " + user.getUsername() + "\n");
-            builder.append("Email: " + user.getEmail() + "\n");
-            builder.append("Role: " + user.getUserRole() + "\n");
-            builder.append("Publications: " + user.getPublications() + "\n");
-            builder.append("Subscriptions: " + user.getSubscriptions() + "\n");
-            builder.append("Subscribers: " + user.getSubscribers() + "\n");
-            builder.append("\n\n");
-        }
-        return builder.toString();
+        return users.stream()
+                .map(UserDto::from)
+                .collect(Collectors.toList());
     }
 }
