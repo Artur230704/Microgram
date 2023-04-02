@@ -13,6 +13,7 @@ public class Like {
     private Long likeId;
     private Long userId;
     private String objectType;
-    private String objectId;
+    private Long publicationId;
+    private Long commentId;
     private LocalDate likeDate;
 }
