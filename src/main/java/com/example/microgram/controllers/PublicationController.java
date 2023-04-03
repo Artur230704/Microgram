@@ -15,7 +15,7 @@ import java.util.List;
 public class PublicationController {
     private final PublicationService publicationService;
 
-    @PostMapping("/publications/creation")
+    @PostMapping("/publications/adding")
     public ResponseEntity<String> addPublication(@RequestBody PublicationDto publicationDto, Authentication authentication){
         String email = authentication.getName();
         return new ResponseEntity<>(publicationService.addPublication(publicationDto,email), HttpStatus.OK);

@@ -20,8 +20,8 @@ import java.util.List;
 public class PublicationDao {
     private final JdbcTemplate jdbcTemplate;
     public String addPublication(PublicationDto publicationDto, String userEmail){
-        String idSql = "SELECT user_id FROM users WHERE email = ?";
-        Long userId = jdbcTemplate.queryForObject(idSql, Long.class, userEmail);
+        String id_sql = "SELECT user_id FROM users WHERE email = ?";
+        Long userId = jdbcTemplate.queryForObject(id_sql, Long.class, userEmail);
 
         String publicationSql = "INSERT INTO publications(user_id,image,description,publication_date) " +
                 "VALUES(?,?,?,?)";

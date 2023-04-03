@@ -41,14 +41,14 @@ public class PublicationService {
     }
 
     public String delete(String email, Long id){
-        if (!rowExistence.checkPublicationExistenceById(id)){
+        if (!rowExistence.getPublicationExistenceById(id)){
             return "there is no a publication with id " + id;
         }
 
         publicationDao.delete(email,id);
 
-        if (rowExistence.checkPublicationExistenceById(id)){
-            return "The publication cannot be deleted";
+        if (rowExistence.getPublicationExistenceById(id)){
+            return "The publication can not be deleted";
         }
 
         return "Publication deleted";

@@ -8,15 +8,21 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RowExistence {
     private final JdbcTemplate jdbcTemplate;
-    public Boolean checkUserExistenceById(Long userId){
+    public Boolean getUserExistenceById(Long userId){
         String sql = "SELECT EXISTS(SELECT FROM users\n" +
                 "    WHERE user_id = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, userId);
     }
 
-    public Boolean checkPublicationExistenceById(Long publicationId){
+    public Boolean getPublicationExistenceById(Long publicationId){
         String sql = "SELECT EXISTS(SELECT FROM publications\n" +
                 "    WHERE publication_id = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, publicationId);
+    }
+
+    public Boolean getCommentExistenceById(Long commentId){
+        String sql = "SELECT EXISTS(SELECT FROM comments\n" +
+                "    WHERE comment_id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, commentId);
     }
 }
