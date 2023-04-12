@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class RowExistence {
+public class DBHelper {
     private final JdbcTemplate jdbcTemplate;
     public Boolean getUserExistenceById(Long userId){
         String sql = "SELECT EXISTS(SELECT FROM users\n" +
@@ -24,5 +24,10 @@ public class RowExistence {
         String sql = "SELECT EXISTS(SELECT FROM comments\n" +
                 "    WHERE comment_id = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, commentId);
+    }
+
+    public Long getUserIdByEmail(String email){
+        String id_sql = "SELECT user_id FROM users WHERE email = ?";
+        return jdbcTemplate.queryForObject(id_sql, Long.class, email);
     }
 }

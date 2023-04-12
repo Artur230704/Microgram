@@ -17,10 +17,7 @@ public class CommentDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public String addComment(CommentDto commentDto, String userEmail){
-        String id_sql = "SELECT user_id FROM users WHERE email = ?";
-        Long userId = jdbcTemplate.queryForObject(id_sql, Long.class, userEmail);
-
+    public String addComment(CommentDto commentDto, Long userId){
         String sql = "INSERT INTO comments (user_id, publication_id, comment_text, comment_date) " +
                 "VALUES(?,?,?,?)";
 

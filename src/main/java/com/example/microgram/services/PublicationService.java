@@ -3,7 +3,7 @@ package com.example.microgram.services;
 import com.example.microgram.daos.PublicationDao;
 import com.example.microgram.dtos.PublicationDto;
 import com.example.microgram.entities.Publication;
-import com.example.microgram.helper.RowExistence;
+import com.example.microgram.helper.DBHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +14,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PublicationService {
     private final PublicationDao publicationDao;
-    private final RowExistence rowExistence;
+    private final DBHelper DBHelper;
 
-    public String addPublication(PublicationDto publicationDto, String userEmail){
+    public String addPublication(PublicationDto publicationDto, String email){
         if (publicationDto.getImage() == null){
             if (publicationDto.getDescription() == null){
                 return "You can not add empty publication";
             }
         }
 
-        return publicationDao.addPublication(publicationDto, userEmail);
+        Long userId = DBHelper.getUserIdByEmail(email);
+        return publicationDao.addPublication(publicationDto, userId);
     }
 
     public List<PublicationDto> getUsersPublication(Long userId){
@@ -41,13 +42,13 @@ public class PublicationService {
     }
 
     public String delete(String email, Long id){
-        if (!rowExistence.getPublicationExistenceById(id)){
+        if (!DBHelper.getPublicationExistenceById(id)){
             return "there is no a publication with id " + id;
         }
 
         publicationDao.delete(email,id);
 
-        if (rowExistence.getPublicationExistenceById(id)){
+        if (DBHelper.getPublicationExistenceById(id)){
             return "The publication can not be deleted";
         }
 

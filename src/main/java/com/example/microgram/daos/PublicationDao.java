@@ -19,10 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PublicationDao {
     private final JdbcTemplate jdbcTemplate;
-    public String addPublication(PublicationDto publicationDto, String userEmail){
-        String id_sql = "SELECT user_id FROM users WHERE email = ?";
-        Long userId = jdbcTemplate.queryForObject(id_sql, Long.class, userEmail);
-
+    public String addPublication(PublicationDto publicationDto, Long userId){
         String publicationSql = "INSERT INTO publications(user_id,image,description,publication_date) " +
                 "VALUES(?,?,?,?)";
 

@@ -16,10 +16,7 @@ import java.time.LocalDate;
 public class LikeDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public String likePublication(LikeDto likeDto, String userEmail){
-        String id_sql = "SELECT user_id FROM users WHERE email = ?";
-        Long userId = jdbcTemplate.queryForObject(id_sql, Long.class, userEmail);
-
+    public String likePublication(LikeDto likeDto, Long userId){
         String sql = "INSERT INTO likes (user_id, object_type, publication_id, comment_id, like_date)\n" +
                 "VALUES (?,?,?,null,?)";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -39,10 +36,7 @@ public class LikeDao {
 
         return "You liked this publication";
     }
-    public String likeComment(LikeDto likeDto, String userEmail){
-        String id_sql = "SELECT user_id FROM users WHERE email = ?";
-        Long userId = jdbcTemplate.queryForObject(id_sql, Long.class, userEmail);
-
+    public String likeComment(LikeDto likeDto, Long userId){
         String sql = "INSERT INTO likes (user_id, object_type, publication_id, comment_id, like_date)\n" +
                 "VALUES (?,?,null,?,?);\n";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {

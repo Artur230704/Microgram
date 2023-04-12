@@ -33,7 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/publications/**").fullyAuthenticated()
                 .antMatchers("/comments/**").fullyAuthenticated()
-                .antMatchers("/likes/**").fullyAuthenticated();
+                .antMatchers("/likes/**").fullyAuthenticated()
+                .antMatchers("/subscriptions/**").fullyAuthenticated();
 
         http.authorizeRequests()
                 .anyRequest()

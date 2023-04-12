@@ -1,7 +1,5 @@
-package com.example.microgram.utils;
+package com.example.microgram.configurations;
 
-
-import com.example.microgram.daos.UserDao;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +12,8 @@ import java.sql.SQLException;
 
 @Configuration
 @AllArgsConstructor
-public class InitDataBase {
+public class DBConfiguration {
     private JdbcTemplate jdbcTemplate;
-    private UserDao userDao;
     private PasswordEncoder encoder;
 
     @Bean
