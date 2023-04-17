@@ -1,8 +1,9 @@
 package com.example.microgram.daos;
 
-import com.example.microgram.dtos.PublicationDto;
-import com.example.microgram.entities.Publication;
+import com.example.microgram.dtos.publication.PublicationAddingDTO;
+import com.example.microgram.dtos.publication.PublicationDisplayDTO;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,7 +20,16 @@ import java.util.List;
 @AllArgsConstructor
 public class PublicationDao {
     private final JdbcTemplate jdbcTemplate;
-    public String addPublication(PublicationDto publicationDto, Long userId){
+
+    public List<PublicationDisplayDTO> getAll(){
+        String sql = "SELECT publication_id,email,image,description FROM publications\n" +
+                "INNER JOIN users on users.user_id = publications.user_id";
+
+        return jdbcTemplate.query(sql,
+                new BeanPropertyRowMapper<>(PublicationDisplayDTO.class));
+    }
+
+    public void addPublication(PublicationAddingDTO publicationDto, Long userId){
         String publicationSql = "INSERT INTO publications(user_id,image,description,publication_date) " +
                 "VALUES(?,?,?,?)";
 
@@ -27,10 +37,11 @@ public class PublicationDao {
                 "SET publications = publications + 1\n" +
                 "WHERE user_id = " + userId;
         jdbcTemplate.batchUpdate(publicationSql, new BatchPreparedStatementSetter() {
+            @SneakyThrows
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setLong(1,userId);
-                ps.setString(2,publicationDto.getImage());
+                ps.setBytes(2,publicationDto.getImageBytes());
                 ps.setString(3,publicationDto.getDescription());
                 ps.setDate(4,Date.valueOf(LocalDate.now()));
             }
@@ -42,38 +53,42 @@ public class PublicationDao {
         });
 
         jdbcTemplate.execute(userSql);
-        return "Publication added";
     }
 
-    public List<Publication> getUsersPublication(Long userId){
-        String sql = "SELECT * FROM publications\n" +
-                "WHERE user_id = ?";
-
-        return jdbcTemplate.query(sql,
-                new BeanPropertyRowMapper<>(Publication.class), userId);
-    }
-
-    public List<Publication> getNewsline(String email){
-        String id_sql = "SELECT user_id FROM users\n" +
-                "WHERE email = ?";
-        Long user_id = jdbcTemplate.queryForObject(id_sql,Long.class,email);
-
-        String sql = "SELECT *\n" +
+    public PublicationDisplayDTO getAddedPublication(){
+        String sql = "SELECT publication_id,email,image,description\n" +
                 "FROM publications\n" +
-                "WHERE user_id = ANY (SELECT subscribedtoid\n" +
-                "                      FROM subscriptions\n" +
-                "                      WHERE subscribingid = ?)";
-
-        return jdbcTemplate.query(sql,
-                new BeanPropertyRowMapper<>(Publication.class), user_id);
+                "INNER JOIN users on users.user_id = publications.user_id\n" +
+                "ORDER BY publication_id DESC LIMIT 1";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(PublicationDisplayDTO.class));
     }
 
-    public void delete(String email, Long publicationId){
+    public List<PublicationDisplayDTO> getUsersPublication(Long userId){
+        String sql = "SELECT publication_id,email,image,description\n" +
+                "FROM publications\n" +
+                "INNER JOIN users on users.user_id = publications.user_id\n" +
+                "WHERE publications.user_id = ?";
+
+        return jdbcTemplate.query(sql,
+                new BeanPropertyRowMapper<>(PublicationDisplayDTO.class), userId);
+    }
+
+    public List<PublicationDisplayDTO> getNewsline(Long userId){
+        String sql = "SELECT publication_id,username,image,description\n" +
+                "FROM publications\n" +
+                "INNER JOIN users on users.user_id = publications.user_id\n" +
+                "WHERE publications.user_id = ANY (SELECT subscribedtoid\n" +
+                "                     FROM subscriptions\n" +
+                "                     WHERE subscribingid = ?)";
+
+        return jdbcTemplate.query(sql,
+                new BeanPropertyRowMapper<>(PublicationDisplayDTO.class), userId);
+    }
+
+    public void delete(Long userId, Long publicationId){
         String sql = "DO $$\n" +
                 "DECLARE\n" +
-                "    userId BIGINT = (SELECT user_id\n" +
-                "                 FROM users\n" +
-                "                 WHERE email = " + "'" + email + "'" + ");\n" +
+                "    userId BIGINT = " + userId + ";\n" +
                 "    publicationId BIGINT = " + publicationId + ";\n" +
                 "BEGIN\n" +
                 "    IF userId = (SELECT user_id\n" +

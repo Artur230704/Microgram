@@ -1,12 +1,16 @@
 package com.example.microgram.configurations;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -52,7 +56,7 @@ public class DBConfiguration {
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS publications(\n" +
                 "    publication_id BIGSERIAL PRIMARY KEY,\n" +
                 "    user_id BIGINT,\n" +
-                "    image TEXT,\n" +
+                "    image BYTEA,\n" +
                 "    description TEXT,\n" +
                 "    publication_date DATE,\n" +
                 "    FOREIGN KEY (user_id) REFERENCES users(user_id)\n" +
@@ -115,11 +119,26 @@ public class DBConfiguration {
         });
     }
     private void fillPublicationsTable(){
-        jdbcTemplate.execute("INSERT INTO publications(user_id, image, description, publication_date)\n" +
+        String sql = "INSERT INTO publications(user_id, image, description, publication_date)\n" +
                 "VALUES\n" +
-                "    (2,'none','my first publication','2023-01-01'),\n" +
-                "    (2,'none','my second publication','2023-02-02'),\n" +
-                "    (3,'none','my blog','2023-03-03');\n");
+                "    (2,?,'my first publication','2023-01-01'),\n" +
+                "    (2,?,'my second publication','2023-02-02'),\n" +
+                "    (3,?,'my blog','2023-03-03');\n";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setBytes(1,getBytesFromUrl("https://s9.travelask.ru/system/images/files/000/336/892/wysiwyg_jpg/10452canada-landscape-map-wallpaper-3.jpg?1502197579"));
+                ps.setBytes(2,getBytesFromUrl("https://s9.travelask.ru/system/images/files/000/336/892/wysiwyg_jpg/10452canada-landscape-map-wallpaper-3.jpg?1502197579"));
+                ps.setBytes(3,getBytesFromUrl("https://s9.travelask.ru/system/images/files/000/336/892/wysiwyg_jpg/10452canada-landscape-map-wallpaper-3.jpg?1502197579"));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return 1;
+            }
+        });
+
     }
     private void fillCommentsTable(){
         jdbcTemplate.execute("INSERT INTO comments(user_id, publication_id, comment_text, comment_date)\n" +
@@ -144,5 +163,19 @@ public class DBConfiguration {
                 "    (1,3,'2022-12-18'),\n" +
                 "    (2,3,'2023-02-26'),\n" +
                 "    (3,2,'2023-03-04')");
+    }
+
+    @SneakyThrows
+    public static byte[] getBytesFromUrl(String urlString) {
+        URL url = new URL(urlString);
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (InputStream inputStream = url.openStream()) {
+            byte[] buffer = new byte[4096];
+            int n = 0;
+            while (-1 != (n = inputStream.read(buffer))) {
+                output.write(buffer, 0, n);
+            }
+        }
+        return output.toByteArray();
     }
 }

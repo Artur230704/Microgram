@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class Publication {
     private Long publicationId;
     private Long userId;
-    private String image;
+    private byte[] image;
     private String description;
     private LocalDate publicationDate;
 }

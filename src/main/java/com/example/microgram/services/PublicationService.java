@@ -1,12 +1,12 @@
 package com.example.microgram.services;
 
 import com.example.microgram.daos.PublicationDao;
-import com.example.microgram.dtos.PublicationDto;
-import com.example.microgram.entities.Publication;
+import com.example.microgram.dtos.publication.PublicationAddingDTO;
+import com.example.microgram.dtos.publication.PublicationDisplayDTO;
 import com.example.microgram.helper.DBHelper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,39 +16,47 @@ public class PublicationService {
     private final PublicationDao publicationDao;
     private final DBHelper DBHelper;
 
-    public String addPublication(PublicationDto publicationDto, String email){
-        if (publicationDto.getImage() == null){
-            if (publicationDto.getDescription() == null){
-                return "You can not add empty publication";
-            }
+    public List<PublicationDisplayDTO> getAll(){
+        return publicationDao.getAll()
+                .stream()
+                .peek(PublicationDisplayDTO::parseByteToString)
+                .collect(Collectors.toList());
+    }
+
+    @SneakyThrows
+    public PublicationDisplayDTO addPublication(PublicationAddingDTO publicationDto, String email){
+        Long userId = DBHelper.getUserIdByEmail(email);
+        publicationDto.setImageBytes(publicationDto.getImage().getBytes());
+        publicationDao.addPublication(publicationDto, userId);
+        PublicationDisplayDTO publication = publicationDao.getAddedPublication();
+        PublicationDisplayDTO.parseByteToString(publication);
+        return publication;
+    }
+
+    public List<PublicationDisplayDTO> getUsersPublication(Long userId){
+        return publicationDao.getUsersPublication(userId)
+                .stream()
+                .peek(PublicationDisplayDTO::parseByteToString)
+                .collect(Collectors.toList());
+    }
+
+    public List<PublicationDisplayDTO> getNewsline(String email){
+        Long userId = DBHelper.getUserIdByEmail(email);
+        return publicationDao.getNewsline(userId)
+                .stream()
+                .peek(PublicationDisplayDTO::parseByteToString)
+                .collect(Collectors.toList());
+    }
+
+    public String delete(String email, Long publicationId){
+        if (!DBHelper.getPublicationExistenceById(publicationId)){
+            return "there is no a publication with id " + publicationId;
         }
 
         Long userId = DBHelper.getUserIdByEmail(email);
-        return publicationDao.addPublication(publicationDto, userId);
-    }
+        publicationDao.delete(userId,publicationId);
 
-    public List<PublicationDto> getUsersPublication(Long userId){
-        List<Publication> publications = publicationDao.getUsersPublication(userId);
-        return publications.stream()
-                .map(PublicationDto::from)
-                .collect(Collectors.toList());
-    }
-
-    public List<PublicationDto> getNewsline(String email){
-        List<Publication> publications = publicationDao.getNewsline(email);
-        return publications.stream()
-                .map(PublicationDto::from)
-                .collect(Collectors.toList());
-    }
-
-    public String delete(String email, Long id){
-        if (!DBHelper.getPublicationExistenceById(id)){
-            return "there is no a publication with id " + id;
-        }
-
-        publicationDao.delete(email,id);
-
-        if (DBHelper.getPublicationExistenceById(id)){
+        if (DBHelper.getPublicationExistenceById(publicationId)){
             return "The publication can not be deleted";
         }
 

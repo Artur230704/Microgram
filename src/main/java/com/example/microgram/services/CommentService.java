@@ -1,10 +1,13 @@
 package com.example.microgram.services;
 
 import com.example.microgram.daos.CommentDao;
-import com.example.microgram.dtos.CommentDto;
+import com.example.microgram.dtos.comment.CommentAddingDTO;
+import com.example.microgram.dtos.comment.CommentDisplayDTO;
 import com.example.microgram.helper.DBHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -13,19 +16,23 @@ public class CommentService {
     private final CommentDao commentDao;
     private final DBHelper DBHelper;
 
-    public String addComment(CommentDto commentDto, String email){
-        if (commentDto.getPublicationId() == null){
+    public String addComment(CommentAddingDTO commentAddingDTO, String email){
+        if (commentAddingDTO.getPublicationId() == null){
             return "Publication id can not be empty";
         }
-        if (!DBHelper.getPublicationExistenceById(commentDto.getPublicationId())){
-            return "There is no publication with id " + commentDto.getPublicationId();
+        if (!DBHelper.getPublicationExistenceById(commentAddingDTO.getPublicationId())){
+            return "There is no publication with id " + commentAddingDTO.getPublicationId();
         }
-        if (commentDto.getCommentText() == null){
+        if (commentAddingDTO.getCommentText() == null){
             return "Comment text can not be empty";
         }
 
         Long userId = DBHelper.getUserIdByEmail(email);
-        return commentDao.addComment(commentDto, userId);
+        return commentDao.addComment(commentAddingDTO, userId);
+    }
+
+    public List<CommentDisplayDTO> getComments(Long publicationId){
+        return commentDao.getComments(publicationId);
     }
 
     public String deleteComment(Long commentId, String email){

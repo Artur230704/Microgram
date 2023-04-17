@@ -1,20 +1,17 @@
-package com.example.microgram.dtos;
+package com.example.microgram.dtos.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CommentDto {
-    private Long commentId;
+public class CommentAddingDTO {
     private Long userId;
     private Long publicationId;
     private String commentText;
-    private LocalDate commentDate;
 }
