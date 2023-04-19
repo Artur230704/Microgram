@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,11 +17,14 @@ import java.util.List;
 public class PublicationController {
     private final PublicationService publicationService;
 
-    @GetMapping("/publications/all")
-    public String getPublications(Model model){
-        List<PublicationDisplayDTO> publications = publicationService.getAll();
-        model.addAttribute("publications",publications);
+    @GetMapping("/publications")
+    public String getPublicationPage(){
         return "publications";
+    }
+
+    @GetMapping("/publications/all")
+    public ResponseEntity<List<PublicationDisplayDTO>> getAllPublications(){
+        return new ResponseEntity<>(publicationService.getAll(), HttpStatus.OK);
     }
 
     @PostMapping("/publications/adding")

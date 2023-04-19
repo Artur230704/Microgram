@@ -20,7 +20,7 @@ public class CommentDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public String addComment(CommentAddingDTO commentAddingDTO, Long userId){
+    public void addComment(CommentAddingDTO commentAddingDTO, Long userId){
         String sql = "INSERT INTO comments (user_id, publication_id, comment_text, comment_date) " +
                 "VALUES(?,?,?,?)";
 
@@ -38,7 +38,6 @@ public class CommentDao {
                 return 1;
             }
         });
-        return "Comment added";
     }
 
     public List<CommentDisplayDTO> getComments(Long publicationId){

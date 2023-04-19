@@ -14,7 +14,6 @@ function changeLikeState(likeIcon){
         likeIcon.className ='bi bi-heart like_icon';
     }
 }
-
 function changeBookmarkState(bookmarkIcon){
     if (bookmarkIcon.classList.contains("bi-bookmark")) {
         bookmarkIcon.classList.remove("bi-bookmark");
@@ -26,7 +25,6 @@ function changeBookmarkState(bookmarkIcon){
         bookmarkIcon.classList.add("bi-bookmark");
     }
 }
-
 function addIconOnImage(post){
     let likeIcon = post.querySelector('.like_icon');
     if (likeIcon.className === 'bi bi-heart like_icon'){
@@ -48,8 +46,7 @@ function addIconOnImage(post){
 
     changeLikeState(likeIcon);
 }
-
-function addCommentHandler(post){
+function addCommentHandler(post) {
     let commentIcon = post.querySelector('.comment_icon')
     let commentForm = post.querySelector('.commentForm')
     let id = commentForm.querySelector('input[name="publicationId"]').value;
@@ -57,84 +54,61 @@ function addCommentHandler(post){
         if (commentForm.classList.contains("d-none")) {
             commentForm.classList.remove("d-none");
             commentForm.classList.add("d-block");
+            showComments(post,id);
         } else {
             commentForm.classList.remove("d-block");
             commentForm.classList.add("d-none");
+            hideComments(post);
         }
     })
 
     commentForm.addEventListener('submit', (event) => {
         event.preventDefault();
         const formData = new FormData(commentForm);
-        axios.post('/comments/adding', formData)
-            .then(response => {
+        formData.append('publicationId', id);
+        fetch('/comments/adding', {
+            method: 'POST',
+            body: formData
+        })
+            .then(data => {
                 commentForm.reset();
-                axios.get(`/comments/` + id)
-                    .then(response => {
-                        const comments = response.data;
-                        const commentsList = post.querySelector('.comments_list');
-                        commentsList.innerHTML = '';
-                        comments.forEach(comment => {
-                            const commentItem = document.createElement('div');
-                            commentItem.classList.add('comment_item');
-                            commentItem.innerHTML = `<p>${comment.email}: ${comment.commentText}</p>`;
-                            commentsList.appendChild(commentItem);
-                        });
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                showComments(post,id);
             })
             .catch(error => {
                 console.error(error);
             });
     });
 }
-
-let posts = document.querySelectorAll('.post');
-posts.forEach(post => {
-    let like = post.querySelector(".like_icon");
-    like.addEventListener("click", () => {
-        changeLikeState(like);
-    });
-
-    let bookmarkIcon = post.querySelector(".bookmark_icon");
-    bookmarkIcon.addEventListener("click", () => {
-        changeBookmarkState(bookmarkIcon);
-    });
-
-    let postImage = post.querySelector(".post_image");
-    postImage.addEventListener('dblclick', function (){
-        addIconOnImage(post);
-    })
-
-    addCommentHandler(post)
-});
-
-let form = document.querySelector('#publicationForm')
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const formData = new FormData(form);
-    axios.post('/publications/adding', formData)
-        .then(response => {
-            const publicationId = response.data.publication_id;
-            const email = response.data.email;
-            const imageString = response.data.imageString;
-            const description = response.data.description;
-
-            let newPost = {
-                publicationId: publicationId,
-                email: email,
-                imageString: imageString,
-                description: description
-            }
-            createPost(newPost);
+function showComments(post,publicationId){
+    fetch(`/comments/` + publicationId)
+        .then(response => response.json())
+        .then(comments => {
+            const commentsList = post.querySelector('.comments_list');
+            commentsList.innerHTML = '';
+            comments.forEach(comment => {
+                const commentItem = document.createElement('div');
+                commentItem.classList.add('comment_item');
+                commentItem.innerHTML = `<p>${comment.email}: ${comment.commentText}</p>`;
+                commentsList.appendChild(commentItem);
+            });
         })
         .catch(error => {
             console.error(error);
         });
-});
-
+}
+function hideComments(post){
+    const commentsList = post.querySelector('.comments_list');
+    commentsList.innerHTML = '';
+}
+function displayPublicationsOnPage(){
+    fetch('/publications/all')
+        .then(response => response.json())
+        .then(posts => {
+            posts.forEach(post => {
+                createPost(post);
+            });
+        });
+}
 function createPost(post) {
     let publicationBlock = document.querySelector(".publication_block");
     let newPost = document.createElement("div");
@@ -156,7 +130,7 @@ function createPost(post) {
         '                        </div>\n' +
         '\n' +
         '                        <form class="commentForm d-none" action="/comments/adding" method="POST" enctype="multipart/form-data">\n' +
-        '                            <input type="hidden" name="publicationId" value="' + post.publicationId + '">\n' +
+        '                            <input type="hidden" name="publicationId" value=' + post.publication_id + '>\n' +
         '                            <textarea name="commentText" placeholder="comment"></textarea>\n' +
         '                            <button type="submit">add comment</button>\n' +
         '                        </form>\n' +
@@ -183,3 +157,32 @@ function createPost(post) {
     publicationBlock.appendChild(newPost);
     addCommentHandler(newPost);
 }
+
+
+
+
+
+displayPublicationsOnPage();
+
+let publicationForm = document.querySelector('#publicationForm')
+publicationForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const formData = new FormData(publicationForm);
+    fetch('/publications/adding', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            let newPost = {
+                publication_id: data.publication_id,
+                email: data.email,
+                imageString: data.imageString,
+                description: data.description
+            };
+            createPost(newPost);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+});

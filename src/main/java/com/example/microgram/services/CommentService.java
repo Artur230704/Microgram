@@ -16,19 +16,9 @@ public class CommentService {
     private final CommentDao commentDao;
     private final DBHelper DBHelper;
 
-    public String addComment(CommentAddingDTO commentAddingDTO, String email){
-        if (commentAddingDTO.getPublicationId() == null){
-            return "Publication id can not be empty";
-        }
-        if (!DBHelper.getPublicationExistenceById(commentAddingDTO.getPublicationId())){
-            return "There is no publication with id " + commentAddingDTO.getPublicationId();
-        }
-        if (commentAddingDTO.getCommentText() == null){
-            return "Comment text can not be empty";
-        }
-
+    public void addComment(CommentAddingDTO commentAddingDTO, String email){
         Long userId = DBHelper.getUserIdByEmail(email);
-        return commentDao.addComment(commentAddingDTO, userId);
+        commentDao.addComment(commentAddingDTO, userId);
     }
 
     public List<CommentDisplayDTO> getComments(Long publicationId){

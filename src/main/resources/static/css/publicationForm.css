@@ -1,19 +1,19 @@
-.comment_block {
+.publication_adding_block {
     height: 100%;
     margin: 50px 0 0 0;
 }
 
-.comment_block {
+.publication_adding_block {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.comment_block input[type="file"]::-webkit-file-upload-button {
+.publication_adding_block input[type="file"]::-webkit-file-upload-button {
     visibility: hidden;
 }
 
-.comment_block input[type="file"]::before {
+.publication_adding_block input[type="file"]::before {
     content: 'Выберите файл';
     display: inline-block;
     background-color: #4CAF50;
@@ -23,11 +23,11 @@
     cursor: pointer;
 }
 
-.comment_block input[type="file"]:hover::before {
+.publication_adding_block input[type="file"]:hover::before {
     background-color: #3e8e41;
 }
 
-.comment_block input[type="text"], input[type="file"] {
+.publication_adding_block input[type="text"], input[type="file"] {
     margin-bottom: 20px;
     width: 100%;
     max-width: 500px;
@@ -38,7 +38,7 @@
     font-size: 16px;
 }
 
-.comment_block input[type="submit"] {
+.publication_adding_block input[type="submit"] {
     display: block;
     margin-top: 20px;
     margin-left: auto;
@@ -53,6 +53,6 @@
 }
 
 
-.comment_block input[type="submit"]:hover {
+.publication_adding_block input[type="submit"]:hover {
     background-color: #3e8e41;
 }

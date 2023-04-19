@@ -14,13 +14,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
-
     private final CommentService commentService;
 
     @PostMapping(value = "/comments/adding")
-    public ResponseEntity<String> addComment(@ModelAttribute CommentAddingDTO commentAddingDTO, Authentication authentication){
+    public void addComment(@ModelAttribute CommentAddingDTO commentAddingDTO, Authentication authentication){
         String email = authentication.getName();
-        return new ResponseEntity<>(commentService.addComment(commentAddingDTO,email), HttpStatus.OK);
+        commentService.addComment(commentAddingDTO,email);
     }
 
     @GetMapping(value = "/comments/{publicationId}")
