@@ -1,7 +1,8 @@
 package com.example.microgram.services;
 
 import com.example.microgram.daos.UserDao;
-import com.example.microgram.dtos.UserDto;
+import com.example.microgram.dtos.user.UserDisplayDTO;
+import com.example.microgram.dtos.user.UserRegisterDTO;
 import com.example.microgram.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,30 +14,21 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserDao userDao;
-    public String register(UserDto userDto){
-        if (userDto.getUsername() == null){
-            return "Username can not be empty";
-        }
-        if (userDto.getEmail() == null){
-            return "User email can not be empty";
-        }
-        if (userDto.getPassword() == null){
-            return "User password can not be empty";
-        }
-        return userDao.register(userDto);
+    public void register(UserRegisterDTO user){
+        userDao.register(user);
     }
 
-    public List<UserDto> findUserByName(String username){
+    public List<UserDisplayDTO> findUserByName(String username){
         List<User> users = userDao.findUserByName(username);
         return users.stream()
-                .map(UserDto::from)
+                .map(UserDisplayDTO::from)
                 .collect(Collectors.toList());
     }
 
-    public List<UserDto> findUserByEmail(String email){
+    public List<UserDisplayDTO> findUserByEmail(String email){
         List<User> users = userDao.findUserByEmail(email);
         return users.stream()
-                .map(UserDto::from)
+                .map(UserDisplayDTO::from)
                 .collect(Collectors.toList());
     }
 }

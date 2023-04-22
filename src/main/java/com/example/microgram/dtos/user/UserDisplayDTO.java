@@ -1,4 +1,4 @@
-package com.example.microgram.dtos;
+package com.example.microgram.dtos.user;
 
 import com.example.microgram.entities.User;
 import lombok.AllArgsConstructor;
@@ -10,19 +10,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
-    private Long userId;
+public class UserDisplayDTO {
     private String username;
     private String email;
-    private String password;
-
     private Integer publications;
     private Integer subscriptions;
     private Integer subscribers;
 
-    public static UserDto from(User user){
+    public static UserDisplayDTO from(User user){
         return builder()
-                .userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .publications(user.getPublications())

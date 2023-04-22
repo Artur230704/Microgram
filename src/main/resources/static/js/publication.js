@@ -1,12 +1,11 @@
 let splashScreen = document.querySelector('#splash-screen');
 let mainContent = document.querySelector('.publication_block');
-let loginButton = document.querySelector('#login-button');
+let splashScreenBtn = document.querySelector('#splash_screen_continue_btn');
 
-loginButton.addEventListener('click', function() {
+splashScreenBtn.addEventListener('click', function() {
     splashScreen.classList.add('d-none');
     mainContent.classList.remove('d-none');
 });
-
 function changeLikeState(likeIcon){
     if (likeIcon.className === 'bi bi-heart like_icon'){
         likeIcon.className = 'bi bi-heart-fill text-danger like_icon';
@@ -171,8 +170,7 @@ publicationForm.addEventListener('submit', (event) => {
     fetch('/publications/adding', {
         method: 'POST',
         body: formData
-    })
-        .then(response => response.json())
+    }).then(response => response.json())
         .then(data => {
             let newPost = {
                 publication_id: data.publication_id,

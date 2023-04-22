@@ -47,8 +47,72 @@
     margin-bottom: 2rem;
 }
 
-#splash-screen button {
+.splash_screen_btn {
     font-size: 25px;
     margin-top: 20px;
     padding: 6px 32px;
+}
+
+#splash_screen_continue_btn {
+    display: block;
+}
+
+
+.publication_adding_block {
+    height: 100%;
+    margin: 50px 0 0 0;
+}
+
+.publication_adding_block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.publication_adding_block input[type="file"]::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.publication_adding_block input[type="file"]::before {
+    content: 'Выберите файл';
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.publication_adding_block input[type="file"]:hover::before {
+    background-color: #3e8e41;
+}
+
+.publication_adding_block input[type="text"], input[type="file"] {
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 500px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.publication_adding_block input[type="submit"] {
+    display: block;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+
+.publication_adding_block input[type="submit"]:hover {
+    background-color: #3e8e41;
 }
