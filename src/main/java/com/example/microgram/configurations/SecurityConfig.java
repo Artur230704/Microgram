@@ -25,11 +25,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication().passwordEncoder(new BCryptPasswordEncoder())
                 .dataSource(dataSource)
                 .usersByUsernameQuery("SELECT email, user_password, enabled FROM users WHERE email = ?;")
-                .authoritiesByUsernameQuery("SELECT email, user_role from users WHERE email = ?");
+                .authoritiesByUsernameQuery("SELECT email, user_roles from users WHERE email = ?");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                        .antMatchers("/publications").permitAll();
+
         http.authorizeRequests()
                 .antMatchers("/publications/adding/**").fullyAuthenticated()
                 .antMatchers("/publications/newsline/**").fullyAuthenticated()

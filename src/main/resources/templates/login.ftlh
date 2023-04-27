@@ -10,7 +10,7 @@
 <body>
 <div class="login-page">
     <div class="form">
-        <form class="login-form" method="POST" enctype="multipart/form-data">
+        <form class="login-form" method="POST">
             <input type="text" placeholder="email" name="email"/>
             <input type="password" placeholder="password" name="password"/>
             <button>login</button>

@@ -45,7 +45,7 @@ public class DBConfiguration {
                 "    username TEXT,\n" +
                 "    email TEXT,\n" +
                 "    user_password TEXT,\n" +
-                "    user_role TEXT,\n" +
+                "    user_roles TEXT[],\n" +
                 "    enabled BOOLEAN,\n" +
                 "    publications INTEGER,\n" +
                 "    subscriptions INTEGER,\n" +
@@ -98,11 +98,11 @@ public class DBConfiguration {
 
 
     private void fillUsersTable(){
-        String sql = "INSERT INTO users(username, email, user_password, user_role, enabled, publications, subscriptions, subscribers)\n" +
+        String sql = "INSERT INTO users(username, email, user_password, user_roles, enabled, publications, subscriptions, subscribers)\n" +
                 "VALUES\n" +
-                "    ('Artur','artur230704@gmail.com',?,'USER',true,0,2,0),\n" +
-                "    ('Andrey','andrey@gmail.com',?,'USER',true,2,1,2),\n" +
-                "    ('Petya','Petya@gmail.com',?,'USER',true,1,1,2);";
+                "    ('Artur','artur230704@gmail.com',?,'{USER}',true,0,2,0),\n" +
+                "    ('Andrey','andrey@gmail.com',?,'{USER}',true,2,1,2),\n" +
+                "    ('Petya','Petya@gmail.com',?,'{USER}',true,1,1,2);";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override

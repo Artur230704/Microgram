@@ -69,25 +69,27 @@
     align-items: center;
 }
 
-.publication_adding_block input[type="file"]::-webkit-file-upload-button {
-    visibility: hidden;
-}
-
-.publication_adding_block input[type="file"]::before {
-    content: 'Выберите файл';
+.publication_adding_block label {
     display: inline-block;
     background-color: #4CAF50;
     color: white;
     padding: 8px 20px;
     border-radius: 5px;
+    border-color: #4CAF50;
     cursor: pointer;
+    text-align: center;
 }
 
-.publication_adding_block input[type="file"]:hover::before {
+.publication_adding_block label:hover{
     background-color: #3e8e41;
+    border-color: #FFFFFF;
 }
 
-.publication_adding_block input[type="text"], input[type="file"] {
+.publication_adding_block label input[type="file"] {
+    display: none;
+}
+
+.publication_adding_block input[type="text"], label {
     margin-bottom: 20px;
     width: 100%;
     max-width: 500px;

@@ -1,6 +1,7 @@
 package com.example.microgram.controllers;
 
 import com.example.microgram.dtos.user.UserDisplayDTO;
+import com.example.microgram.dtos.user.UserLoginDTO;
 import com.example.microgram.dtos.user.UserRegisterDTO;
 import com.example.microgram.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -32,6 +36,14 @@ public class UserController {
     public String register(@RequestBody UserRegisterDTO user){
         userService.register(user);
         return "redirect:/publications";
+    }
+
+    @PostMapping("/users/auth/login") // not ready yet
+    public String login(@RequestBody UserLoginDTO user){
+        if (userService.login(user)){
+            return "redirect:/publications";
+        }
+        return "redirect:/users/auth/login";
     }
 
     @GetMapping("/users/name/{username}")

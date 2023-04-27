@@ -1,11 +1,44 @@
 let splashScreen = document.querySelector('#splash-screen');
 let mainContent = document.querySelector('.publication_block');
 let splashScreenBtn = document.querySelector('#splash_screen_continue_btn');
+let userInfo = document.querySelector('#user-info');
+let logoutBtn = document.querySelector('#logout-btn');
+
+let user = restoreUser();
+if (user !== null){
+    hideSplashScreen()
+    userInfo.innerHTML = '<p class="nav-link active" aria-current="page">' + user.email + '</p>'
+} else {
+    userInfo.innerHTML = ' ';
+}
 
 splashScreenBtn.addEventListener('click', function() {
+    hideSplashScreen()
+});
+
+logoutBtn.addEventListener('click', (event) => {
+    event.preventDefault()
+    deleteLocalStorage();
+    userInfo.innerHTML = ' ';
+    showSplashScreen();
+})
+
+function showSplashScreen(){
+    splashScreen.classList.remove('d-none');
+    mainContent.classList.add('d-none');
+}
+function hideSplashScreen(){
     splashScreen.classList.add('d-none');
     mainContent.classList.remove('d-none');
-});
+}
+function deleteLocalStorage(){
+    localStorage.removeItem('user');
+}
+function restoreUser() {
+    const userAsJSON = localStorage.getItem('user');
+    const user = JSON.parse(userAsJSON);
+    return user;
+}
 function changeLikeState(likeIcon){
     if (likeIcon.className === 'bi bi-heart like_icon'){
         likeIcon.className = 'bi bi-heart-fill text-danger like_icon';

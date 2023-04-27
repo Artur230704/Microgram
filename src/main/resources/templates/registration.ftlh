@@ -11,15 +11,15 @@
 <div class="login-page">
     <div class="form">
         <form class="register-form" method="POST" enctype="multipart/form-data">
-            <input type="text" placeholder="name" name="username"/>
-            <input type="text" placeholder="email address" name="email"/>
-            <input type="password" placeholder="password" name="password"/>
+            <input type="text" placeholder="name" name="username" required/>
+            <input type="text" placeholder="email address" name="email" required/>
+            <input type="password" placeholder="password" name="password" required/>
             <button>create</button>
             <p class="message">Already registered? <a href="/users/auth/login">Sign In</a></p>
         </form>
     </div>
 </div>
 
-<script src="/js/auth.js"></script>
+<script src="/js/registration.js"></script>
 </body>
 </html>

@@ -9,22 +9,51 @@
     <link rel="stylesheet" href="/css/comment.css">
 </head>
 <body>
-    <div class="container">
-        <div class="publication_block"></div>
+    <div class="header">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Microgram</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
 
-        <div class="publication_adding_block">
-            <form action="/publications/adding" method="POST" enctype="multipart/form-data" id="publicationForm">
-                <input type="text" name="description" placeholder="description">
-                <input type="file" name="image">
-                <input type="submit" value="send">
-            </form>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item" id="user-info"></li>
+                    <li class="nav-item" id="logout-btn">
+                        <a class="nav-link active" aria-current="page" href="#">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+    <div class="container">
+        <div class="main_block row align-items-start">
+            <div class="publication_block col-8"></div>
+
+            <div class="publication_adding_block col-4">
+                <form action="/publications/adding" method="POST" enctype="multipart/form-data" id="publicationForm">
+                    <p class="publication_text">New post</p>
+                    <input type="text" name="description" placeholder="description">
+                    <label>
+                        <input type="file" name="image">
+                        Select a file
+                    </label>
+                    <input type="submit" value="send">
+                </form>
+            </div>
         </div>
 
         <div id="splash-screen" class="d-flex align-items-center justify-content-center">
             <div class="text-center">
                 <h1 class="mb-3">Welcome!</h1>
                 <p class="mb-3">Please sign in to continue.</p>
-<#--                <a href="/users/auth/login" class="btn btn-primary splash_screen_btn">Login</a>-->
+                <a href="/users/auth/login" class="btn btn-primary splash_screen_btn">Login</a>
                 <a href="/users/auth/signup" class="btn btn-primary splash_screen_btn">Register</a>
                 <a href="#" class="btn btn-primary splash_screen_btn" id="splash_screen_continue_btn">Continue</a>
             </div>
